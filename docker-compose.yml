@@ -1,0 +1,60 @@
+version: '3.8'
+
+services:
+
+  db:
+    image: mysql:latest
+    container_name: mysql-db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: authservice
+      MYSQL_TCP_PORT: 3021
+    ports:
+      - "3021:3021"
+    expose:
+      - 3021
+    networks:
+      - default
+
+  auth-server:
+    image: aiu/auth-server
+    container_name: auth-server
+    restart: on-failure
+    build:
+      context: ./AIU-Auth-Service
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    environment:
+      secret: akatsuki
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3021/userservice?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "3020:3020"
+    expose:
+      - 3020
+    networks:
+      - default
+
+  api-gateway:
+    image: aiu/api-gateway
+    container_name: api-gateway
+    restart: on-failure
+    build:
+      context: ./AIU-API-Gateway-Express
+      dockerfile: ./Dockerfile
+    depends_on:
+      - auth-server
+    ports:
+      - "3010:3010"
+    expose:
+      - 3010
+    command: bash -c "npm run start"
+    networks:
+      - default
+
+networks:
+  default:
