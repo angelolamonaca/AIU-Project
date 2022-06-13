@@ -1,0 +1,6 @@
+[submodule "AIU-API-Gateway-Express"]
+	path = AIU-API-Gateway-Express
+	url = https://github.com/angelolamonaca/AIU-API-Gateway-Express.git
+[submodule "AIU-Auth-Service"]
+	path = AIU-Auth-Service
+	url = https://github.com/angelolamonaca/AIU-Auth-Service.git
