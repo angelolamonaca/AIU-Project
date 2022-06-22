@@ -4,6 +4,9 @@
 [submodule "AIU-Auth-Service"]
 	path = AIU-Auth-Service
 	url = https://github.com/angelolamonaca/AIU-Auth-Service.git
+[submodule "AIU-Wallet-Service"]
+	path = AIU-Wallet-Service
+	url = https://github.com/angelolamonaca/AIU-Wallet-Service.git
 [submodule "AIU-Frontend"]
 	path = AIU-Frontend
 	url = https://github.com/angelolamonaca/AIU-Frontend.git
