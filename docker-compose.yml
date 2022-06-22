@@ -26,7 +26,7 @@ services:
       context: ./AIU-Auth-Service
       dockerfile: ./Dockerfile
     depends_on:
-      - db
+      - auth-db
     environment:
       secret: akatsuki
       SPRING_DATASOURCE_URL: jdbc:mysql://auth-db:3021/userservice?createDatabaseIfNotExist=true
@@ -56,19 +56,14 @@ services:
       - default
 
   wallet-server:
-    image: aiu/auth-server
-    container_name: auth-server
+    image: aiu/wallet-server
+    container_name: wallet-server
     restart: on-failure
     build:
-      context: ./AIU-Auth-Service
+      context: ./AIU-Wallet-Service
       dockerfile: ./Dockerfile
     depends_on:
-      - db
-    environment:
-      secret: akatsuki
-      SPRING_DATASOURCE_URL: jdbc:mysql://auth-db:3021/userservice?createDatabaseIfNotExist=true
-      SPRING_DATASOURCE_USERNAME: root
-      SPRING_DATASOURCE_PASSWORD: root
+      - wallet-db
     ports:
       - "3030:3030"
     expose:
