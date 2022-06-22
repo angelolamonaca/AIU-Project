@@ -2,9 +2,9 @@ version: '3.8'
 
 services:
 
-  db:
+  auth-db:
     image: mysql:latest
-    container_name: mysql-db
+    container_name: auth-db
     command: --default-authentication-plugin=mysql_native_password
     restart: always
     environment:
@@ -29,13 +29,50 @@ services:
       - db
     environment:
       secret: akatsuki
-      SPRING_DATASOURCE_URL: jdbc:mysql://mysql-db:3021/userservice?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://auth-db:3021/userservice?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
     ports:
       - "3020:3020"
     expose:
-      - 3020
+      - 3030
+    networks:
+      - default
+
+  wallet-db:
+    image: mysql:latest
+    container_name: wallet-db
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: walletservice
+      MYSQL_TCP_PORT: 3031
+    ports:
+      - "3031:3031"
+    expose:
+      - 3031
+    networks:
+      - default
+
+  wallet-server:
+    image: aiu/auth-server
+    container_name: auth-server
+    restart: on-failure
+    build:
+      context: ./AIU-Auth-Service
+      dockerfile: ./Dockerfile
+    depends_on:
+      - db
+    environment:
+      secret: akatsuki
+      SPRING_DATASOURCE_URL: jdbc:mysql://auth-db:3021/userservice?createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    ports:
+      - "3030:3030"
+    expose:
+      - 3030
     networks:
       - default
 
@@ -58,3 +95,4 @@ services:
 
 networks:
   default:
+
