@@ -32,6 +32,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://auth-db:3021/authservice?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: root
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID}
     ports:
       - "3020:3020"
     expose:
@@ -59,6 +60,8 @@ services:
     image: aiu/wallet-server
     container_name: wallet-server
     restart: on-failure
+    environment:
+      IS_DOCKER: true
     build:
       context: ./AIU-Wallet-Service
       dockerfile: ./Dockerfile
@@ -75,6 +78,8 @@ services:
     image: aiu/api-gateway
     container_name: api-gateway
     restart: on-failure
+    environment:
+      IS_DOCKER: true
     build:
       context: ./AIU-API-Gateway-Express
       dockerfile: ./Dockerfile
